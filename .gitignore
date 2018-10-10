@@ -1,0 +1,6 @@
+.data
+.env
+.sass-cache/*
+logs/*
+node_modules/*
+

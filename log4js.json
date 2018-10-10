@@ -1,0 +1,32 @@
+{
+    "appenders": {
+        "console": {
+            "type": "console"
+        },
+        "app": {
+            "type": "logLevelFilter",
+            "filename": "logs/app.log",
+            "maxLogSize": 5242880,
+            "numBackups": 3,
+            "level": "DEBUG",
+            "maxLevel": "WARN"
+        },
+        "error": {
+            "type": "logLevelFilter",
+            "filename": "logs/error.log",
+            "maxLogSize": 5242880,
+            "numBackups": 3,
+            "level": "ERROR"
+        }
+    },
+    "categories": {
+        "default": {
+            "appenders": [
+                "console",
+                "app",
+                "error"
+            ],
+            "level": "DEBUG"
+        }
+    }
+}
