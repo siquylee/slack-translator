@@ -6,22 +6,42 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const log4js = __importStar(require("log4js"));
+const seneca_1 = __importDefault(require("seneca"));
 class App {
     constructor() {
     }
     static get Instance() {
         return this._instance || (this._instance = new this());
     }
+    get controller() {
+        return this._controller;
+    }
     get storage() {
-        return this.controller.storage;
+        return this._controller.storage;
+    }
+    get seneca() {
+        return this._seneca;
     }
     init(controller) {
-        this.controller = controller;
-        log4js.configure('./log4js.json');
+        this._controller = controller;
+        this._seneca = seneca_1.default();
+        log4js.configure(`${this.getRootPath()}/log4js.json`);
+        this._seneca.use('./plugins/google-translate');
+        // Test plugin
+        this._seneca.act({ role: 'translator', cmd: 'translate', from: 'en', to: 'ja', text: 'Hello World' }, function (err, res) {
+            if (err)
+                console.log(err);
+            console.log(res);
+        });
+        // Test logger
+        this.getLogger().info('Up & running');
     }
-    getLogger(name) {
+    getLogger(name = 'default') {
         return log4js.getLogger(name);
     }
     getRootPath() {

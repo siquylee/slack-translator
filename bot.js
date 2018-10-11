@@ -12,6 +12,7 @@ if (!process.env.clientId || !process.env.clientSecret || !process.env.DB_PATH) 
 var bot_options = {
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
+    clientSigningSecret: process.env.clientSigningSecret,
     debug: false,
     scopes: ['bot']
 };
