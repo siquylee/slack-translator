@@ -4,6 +4,7 @@ import { l, langs } from '../utils';
 
 const callbackTranslateForm = 'google-translate-form';
 const slashCmd = '/tl';
+const actionTranslate = 'action-translate';
 
 export = function (controller: SlackController) {
     controller.on('slash_command', function (bot, message) {
@@ -15,7 +16,7 @@ export = function (controller: SlackController) {
             }
             else {
                 // Show translate dialog
-                showDialog(bot, message, { to: App.instance.lang, text: '' });
+                showDialog(bot, message, { id: callbackTranslateForm, to: App.instance.lang, text: '' });
             }
         }
     });
@@ -25,11 +26,18 @@ export = function (controller: SlackController) {
     });
 
     controller.on('message_action', function (bot, message) {
+        let id: string = (message as any).callback_id;
+        if (id == actionTranslate) {
+            this.bot.replyAcknowledge();
+            let text: string = (message as any).message.text!;
+            showDialog(bot, message, { id: actionTranslate, to: App.instance.lang, text: text });
+        }
     });
 
     controller.on('dialog_submission', function (bot, message) {
-        (this.bot as any).dialogOk();
-        if ((message as any).callback_id == callbackTranslateForm) {
+        let id: string = (message as any).callback_id;
+        if (id == callbackTranslateForm || id == actionTranslate) {            
+            
             let args = (message as any).submission;
             args.role = 'translator';
             args.cmd = 'translate';
@@ -40,8 +48,13 @@ export = function (controller: SlackController) {
                     (bot as any).whisper(message, err);
                 }
                 else {
-                    bot.reply(message, res.text);
+                    if (id == callbackTranslateForm)
+                        bot.reply(message, res.text);
+                    else
+                        (bot as any).whisper(message, res.text);
                 }
+                
+                (bot as any).dialogOk();
             });
         }
     });
@@ -81,7 +94,7 @@ function doTranslate(bot: SlackBot, message: SlackMessage, args: any): void {
 function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
     let dialog = (bot as any).createDialog(
         l('Translate Text'),
-        callbackTranslateForm,
+        opt.id,
         l('Translate')
     );
     let targets = new Array();
