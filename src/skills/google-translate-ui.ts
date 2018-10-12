@@ -36,8 +36,8 @@ export = function (controller: SlackController) {
 
     controller.on('dialog_submission', function (bot, message) {
         let id: string = (message as any).callback_id;
-        if (id == callbackTranslateForm || id == actionTranslate) {            
-            
+        if (id == callbackTranslateForm || id == actionTranslate) {
+
             let args = (message as any).submission;
             args.role = 'translator';
             args.cmd = 'translate';
@@ -53,7 +53,6 @@ export = function (controller: SlackController) {
                     else
                         (bot as any).whisper(message, res.text);
                 }
-                
                 (bot as any).dialogOk();
             });
         }
