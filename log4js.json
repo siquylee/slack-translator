@@ -3,20 +3,28 @@
         "console": {
             "type": "console"
         },
-        "app": {
+        "appFile": {
             "type": "file",
             "filename": "logs/app.log",
             "maxLogSize": 5242880,
-            "numBackups": 3,
-            "level": "DEBUG",
-            "maxLevel": "WARN"
+            "numBackups": 3
         },
-        "err": {
+        "app": {
+            "type": "logLevelFilter",
+            "level": "DEBUG",
+            "maxLevel": "WARN",
+            "appender": "appFile"
+        },
+        "errorFile": {
             "type": "file",
             "filename": "logs/err.log",
             "maxLogSize": 5242880,
-            "numBackups": 3,
-            "level": "ERROR"
+            "numBackups": 3
+        },
+        "err": {
+            "type": "logLevelFilter",
+            "level": "ERROR",
+            "appender": "errorFile"
         }
     },
     "categories": {

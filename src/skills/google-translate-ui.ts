@@ -1,4 +1,4 @@
-import { SlackController } from 'botkit';
+import { SlackController, SlackBot, SlackMessage } from 'botkit';
 import App from '../app';
 
 export = function (controller: SlackController) {
@@ -8,11 +8,30 @@ export = function (controller: SlackController) {
     controller.on('slash_command', function (bot, message) {
         if ((message as any).command == slashCmd) {
             let res = parseCmd(`/tl ${message.text}`);
+            console.log(res);
             if (res.length == 1) {
                 // Show translate dialog
             }
-            else {
+            else if (res.length == 3) {
                 // Do translate text
+                App.Instance.seneca.act({
+                    role: 'translator',
+                    cmd: 'translate', from: 'auto',
+                    to: res[1],
+                    text: res[2]
+                },
+                    function (err: any, res: any) {
+                        if (err) {
+                            App.Instance.getLogger().error(err);
+                            showError(bot, message, err);
+                        }
+                        else {
+                            show(bot, message, res.text);
+                        }
+                    });
+            }
+            else {
+                showHelp(bot, message);
             }
         }
     });
@@ -49,6 +68,16 @@ function parseCmd(cmd: string): string[] {
             }
         }
     }
-    
+
     return res;
+}
+
+function show(bot: SlackBot, message: SlackMessage, text: string) {
+    bot.reply(message, text);
+}
+
+function showError(bot: SlackBot, message: SlackMessage, err: any) {
+}
+
+function showHelp(bot: SlackBot, message: SlackMessage) {
 }

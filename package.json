@@ -21,7 +21,6 @@
         "sqlite3": "^4.0.1"
     },
     "devDependencies": {
-        "@types/bluebird": "^3.5.24",
         "@types/google-translate-api": "^2.3.0",
         "@types/seneca": "^2.1.9"
     },

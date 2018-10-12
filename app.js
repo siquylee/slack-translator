@@ -32,14 +32,6 @@ class App {
         this._seneca = seneca_1.default();
         log4js.configure(`${this.getRootPath()}/log4js.json`);
         this._seneca.use('./plugins/google-translate');
-        // Test plugin
-        this._seneca.act({ role: 'translator', cmd: 'translate', from: 'en', to: 'ja', text: 'Hello World' }, function (err, res) {
-            if (err)
-                console.log(err);
-            console.log(res);
-        });
-        // Test logger
-        this.getLogger().info('Up & running');
     }
     getLogger(name = 'default') {
         return log4js.getLogger(name);

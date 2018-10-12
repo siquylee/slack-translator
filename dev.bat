@@ -1,1 +1,1 @@
-ssh -R athena:80:localhost:3000 serveo.net
+python tools\pagekite.py 3000 athena.pagekite.me
