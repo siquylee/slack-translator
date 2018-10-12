@@ -44,7 +44,7 @@ webserver.get('/', function (req, res) {
 })
 
 // Start app domain
-require(__dirname + '/app.js').default.Instance.init(controller);
+require(__dirname + '/app.js').default.instance.init(controller);
 
 // Set up a simple storage backend for keeping a record of customers
 // who sign up for the app via the oauth

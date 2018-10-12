@@ -11,7 +11,7 @@ export = function (options: any) {
                 done(null, { text: res.text })
             })
             .catch(err => {
-                App.Instance.getLogger().error(err);
+                App.instance.getLogger().error(err);
                 done(err, null);
             });
     });

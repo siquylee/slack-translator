@@ -1,37 +1,21 @@
 import { SlackController, SlackBot, SlackMessage } from 'botkit';
 import App from '../app';
+import { l, langs } from '../utils';
+
+const callbackTranslateForm = 'google-translate-form';
+const slashCmd = '/tl';
 
 export = function (controller: SlackController) {
-    const slashCmd = '/tl';
-    const callbackId = 'google-translate';
-
     controller.on('slash_command', function (bot, message) {
         if ((message as any).command == slashCmd) {
-            let res = parseCmd(`/tl ${message.text}`);
-            console.log(res);
-            if (res.length == 1) {
-                // Show translate dialog
-            }
-            else if (res.length == 3) {
-                // Do translate text
-                App.Instance.seneca.act({
-                    role: 'translator',
-                    cmd: 'translate', from: 'auto',
-                    to: res[1],
-                    text: res[2]
-                },
-                    function (err: any, res: any) {
-                        if (err) {
-                            App.Instance.getLogger().error(err);
-                            showError(bot, message, err);
-                        }
-                        else {
-                            show(bot, message, res.text);
-                        }
-                    });
+            let args = parseCmd(`/tl ${message.text}`);
+            if (args.to && args.text) {
+                // Do the translation
+                doTranslate(bot, message, args);
             }
             else {
-                showHelp(bot, message);
+                // Show translate dialog
+                showDialog(bot, message, { to: App.instance.lang, text: '' });
             }
         }
     });
@@ -44,40 +28,76 @@ export = function (controller: SlackController) {
     });
 
     controller.on('dialog_submission', function (bot, message) {
-        if ((message as any).callback_id == callbackId) {
-            (bot as any).dialogOk();
-            // TODO
+        (this.bot as any).dialogOk();
+        if ((message as any).callback_id == callbackTranslateForm) {
+            let args = (message as any).submission;
+            args.role = 'translator';
+            args.cmd = 'translate';
+            args.from = 'auto';
+            App.instance.seneca.act(args, function (err: any, res: any) {
+                if (err) {
+                    App.instance.getLogger().error(err);
+                    (bot as any).whisper(message, err);
+                }
+                else {
+                    bot.reply(message, res.text);
+                }
+            });
         }
     });
 }
 
-function parseCmd(cmd: string): string[] {
+function parseCmd(cmd: string): any {
     const pattern = /(\/tl)(\s+(af|sq|am|ar|hy|az|eu|be|bn|bs|bg|ca|ceb|ny|zh-cn|zh-tw|co|hr|cs|da|nl|en|eo|et|tl|fi|fr|fy|gl|ka|de|el|gu|ht|ha|haw|iw|hi|hmn|hu|is|ig|id|ga|it|ja|jw|kn|kk|km|ko|ku|ky|lo|la|lv|lt|lb|mk|mg|ms|ml|mt|mi|mr|mn|my|ne|no|ps|fa|pl|pt|ma|ro|ru|sm|gd|sr|st|sn|sd|si|sk|sl|so|es|su|sw|sv|tg|ta|te|th|tr|uk|ur|uz|vi|cy|xh|yi|yo|zu)\s+([^\n]+))?/gi;
-    let res: string[] = [];
+    let res = {
+        role: 'translator',
+        cmd: 'translate',
+    };
     let matches = pattern.exec(cmd.trim());
 
     if (matches) {
-        if (matches[1]) {
-            // /tl command
-            res.push(matches[1])
-            if (matches[3] && matches[4]) {
-                // lang
-                res.push(matches[3])
-                // text
-                res.push(matches[4])
-            }
-        }
+        res['from'] = 'auto';
+        if (matches[3])
+            res['to'] = matches[3];
+        if (matches[4])
+            res['text'] = matches[4];
     }
 
     return res;
 }
 
-function show(bot: SlackBot, message: SlackMessage, text: string) {
-    bot.reply(message, text);
+function doTranslate(bot: SlackBot, message: SlackMessage, args: any): void {
+    App.instance.seneca.act(args, function (err: any, res: any) {
+        if (err) {
+            App.instance.getLogger().error(err);
+            showError(bot, message, err);
+        }
+        else {
+            show(bot, message, res.text);
+        }
+    });
 }
 
-function showError(bot: SlackBot, message: SlackMessage, err: any) {
+function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
+    let dialog = (bot as any).createDialog(
+        l('Translate Text'),
+        callbackTranslateForm,
+        l('Translate')
+    );
+    let targets = new Array();
+    Object.keys(langs).forEach(k => targets.push({ label: langs[k], value: k }));
+    dialog.addSelect(l('To Language'), 'to', opt.to, targets, { placeholder: l('Select language') });
+    dialog.addTextarea(l('Text'), 'text', opt.text, { hint: l('Enter text in any language to be translated') });
+    (bot as any).replyWithDialog(message, dialog.asObject(), function (err: any, res: any) {
+        if (err)
+            App.instance.getLogger().error(res);
+    });
 }
 
-function showHelp(bot: SlackBot, message: SlackMessage) {
+function show(bot: SlackBot, message: SlackMessage, text: string): void {
+    bot.replyPublic(message, text);
+}
+
+function showError(bot: SlackBot, message: SlackMessage, err: any): void {
+    bot.replyPrivate(message, l('Could not translate text. The reason is ') + ` \`${err}\``)
 }

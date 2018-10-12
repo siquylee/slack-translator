@@ -12,7 +12,7 @@ module.exports = function (options) {
             done(null, { text: res.text });
         })
             .catch(err => {
-            app_1.default.Instance.getLogger().error(err);
+            app_1.default.instance.getLogger().error(err);
             done(err, null);
         });
     });
