@@ -1,26 +1,23 @@
 {
-  "name": "Botkit Starter Kit",
-  "description": "A starting point for building custom Slack applications",
-  "repository": "https://github.com/howdyai/botkit-starter-slack",
-  "keywords": ["node", "bots", "slack","botkit"],
-  "website": "https://studio.botkit.ai/",
-  "success_url":"/",
-  "addons":[
-    {
-      "plan": "mongolab",
-      "as": "MONGO"
+    "name": "Athena",
+    "description": "A Translate App for Slack",
+    "repository": "https://github.com/siquylee/slack-translator",
+    "keywords": [
+        "node",
+        "bots",
+        "slack",
+        "botkit",
+        "translate"
+    ],
+    "website": "https://github.com/siquylee/slack-translator",
+    "success_url": "/",
+    "addons": [],
+    "env": {
+        "clientId": {
+            "description": "Client ID provided by Slack"
+        },
+        "clientSecret": {
+            "description": "Client Secret provided by Slack"
+        }
     }
-  ],
-  "env": {
-      "clientId": {
-          "description": "Client ID provided by Slack"
-      },
-      "clientSecret": {
-          "description": "Client Secret provided by Slack"
-      },
-      "studio_token": {
-          "description": "Token associated with your bot in Botkit Studio",
-          "required":false
-      }
-  }
 }

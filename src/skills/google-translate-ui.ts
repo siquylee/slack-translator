@@ -9,6 +9,7 @@ const actionTranslate = 'action-translate';
 export = function (controller: SlackController) {
     controller.on('slash_command', function (bot, message) {
         if ((message as any).command == slashCmd) {
+            bot.replyAcknowledge();
             let args = parseCmd(`/tl ${message.text}`);
             if (args.to && args.text) {
                 // Do the translation
@@ -37,7 +38,7 @@ export = function (controller: SlackController) {
     controller.on('dialog_submission', function (bot, message) {
         let id: string = (message as any).callback_id;
         if (id == callbackTranslateForm || id == actionTranslate) {
-
+            (bot as any).dialogOk();
             let args = (message as any).submission;
             args.role = 'translator';
             args.cmd = 'translate';
@@ -53,7 +54,6 @@ export = function (controller: SlackController) {
                     else
                         (bot as any).whisper(message, res.text);
                 }
-                (bot as any).dialogOk();
             });
         }
     });
@@ -107,9 +107,9 @@ function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
 }
 
 function show(bot: SlackBot, message: SlackMessage, text: string): void {
-    bot.replyPublic(message, text);
+    bot.reply(message, text);
 }
 
 function showError(bot: SlackBot, message: SlackMessage, err: any): void {
-    bot.replyPrivate(message, l('Could not translate text. The reason is ') + ` \`${err}\``)
+    (bot as any).whisper(message, l('Could not translate text. The reason is ') + ` \`${err}\``)
 }

@@ -46,14 +46,15 @@ function showDialog(bot, message, opt) {
     });
 }
 function show(bot, message, text) {
-    bot.replyPublic(message, text);
+    bot.reply(message, text);
 }
 function showError(bot, message, err) {
-    bot.replyPrivate(message, utils_1.l('Could not translate text. The reason is ') + ` \`${err}\``);
+    bot.whisper(message, utils_1.l('Could not translate text. The reason is ') + ` \`${err}\``);
 }
 module.exports = function (controller) {
     controller.on('slash_command', function (bot, message) {
         if (message.command == slashCmd) {
+            bot.replyAcknowledge();
             let args = parseCmd(`/tl ${message.text}`);
             if (args.to && args.text) {
                 // Do the translation
@@ -79,6 +80,7 @@ module.exports = function (controller) {
     controller.on('dialog_submission', function (bot, message) {
         let id = message.callback_id;
         if (id == callbackTranslateForm || id == actionTranslate) {
+            bot.dialogOk();
             let args = message.submission;
             args.role = 'translator';
             args.cmd = 'translate';
@@ -94,7 +96,6 @@ module.exports = function (controller) {
                     else
                         bot.whisper(message, res.text);
                 }
-                bot.dialogOk();
             });
         }
     });

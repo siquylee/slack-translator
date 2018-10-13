@@ -7,7 +7,7 @@ export default class App {
     private _controller: SlackController;
     private _seneca: Instance;
     private i18n: any;
-    private readonly langFile = './../../locales/locale.json';
+    private readonly langFile = process.env.LOCALE_PATH;
     private currentLang = 'en';
 
     private constructor() {

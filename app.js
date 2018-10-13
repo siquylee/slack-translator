@@ -14,7 +14,7 @@ const log4js = __importStar(require("log4js"));
 const seneca_1 = __importDefault(require("seneca"));
 class App {
     constructor() {
-        this.langFile = './../../locales/locale.json';
+        this.langFile = process.env.LOCALE_PATH;
         this.currentLang = 'en';
     }
     static get instance() {
