@@ -19,6 +19,7 @@
         "node-env-file": "^0.1.8",
         "request": "^2.79.0",
         "seneca": "^3.7.0",
+        "slack-message-builder": "^1.2.1",
         "sqlite3": "^4.0.1"
     },
     "devDependencies": {

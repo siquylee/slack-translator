@@ -1,7 +1,7 @@
 import App from "./app";
 
-export function l(msg: string): string {
-    return App.instance.localize(msg);
+export function l(msg: string, args?: any): string {
+    return App.instance.localize(msg, args);
 }
 
 export var langs = {

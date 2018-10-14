@@ -35,11 +35,11 @@ function doTranslate(bot, message, args) {
     });
 }
 function showDialog(bot, message, opt) {
-    let dialog = bot.createDialog(utils_1.l('Translate Text'), opt.id, utils_1.l('Translate'));
+    let dialog = bot.createDialog(utils_1.l('msg.formTranslate.Title'), opt.id, utils_1.l('msg.formTranslate.Translate'));
     let targets = new Array();
     Object.keys(utils_1.langs).forEach(k => targets.push({ label: utils_1.langs[k], value: k }));
-    dialog.addSelect(utils_1.l('To Language'), 'to', opt.to, targets, { placeholder: utils_1.l('Select language') });
-    dialog.addTextarea(utils_1.l('Text'), 'text', opt.text, { hint: utils_1.l('Enter text in any language to be translated') });
+    dialog.addSelect(utils_1.l('msg.formTranslate.To'), 'to', opt.to, targets, { placeholder: utils_1.l('msg.formTranslate.ToHint') });
+    dialog.addTextarea(utils_1.l('msg.formTranslate.Text'), 'text', opt.text, { hint: utils_1.l('msg.formTranslate.TextHint') });
     bot.replyWithDialog(message, dialog.asObject(), function (err, res) {
         if (err)
             app_1.default.instance.getLogger().error(res);
@@ -49,7 +49,7 @@ function show(bot, message, text) {
     bot.reply(message, text);
 }
 function showError(bot, message, err) {
-    bot.whisper(message, utils_1.l('Could not translate text. The reason is ') + ` \`${err}\``);
+    bot.whisper(message, utils_1.l('err.UnableToTranslate') + ` \`${err}\``);
 }
 module.exports = function (controller) {
     controller.on('slash_command', function (bot, message) {

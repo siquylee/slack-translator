@@ -92,14 +92,14 @@ function doTranslate(bot: SlackBot, message: SlackMessage, args: any): void {
 
 function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
     let dialog = (bot as any).createDialog(
-        l('Translate Text'),
+        l('msg.formTranslate.Title'),
         opt.id,
-        l('Translate')
+        l('msg.formTranslate.Translate')
     );
     let targets = new Array();
     Object.keys(langs).forEach(k => targets.push({ label: langs[k], value: k }));
-    dialog.addSelect(l('To Language'), 'to', opt.to, targets, { placeholder: l('Select language') });
-    dialog.addTextarea(l('Text'), 'text', opt.text, { hint: l('Enter text in any language to be translated') });
+    dialog.addSelect(l('msg.formTranslate.To'), 'to', opt.to, targets, { placeholder: l('msg.formTranslate.ToHint') });
+    dialog.addTextarea(l('msg.formTranslate.Text'), 'text', opt.text, { hint: l('msg.formTranslate.TextHint') });
     (bot as any).replyWithDialog(message, dialog.asObject(), function (err: any, res: any) {
         if (err)
             App.instance.getLogger().error(res);
@@ -111,5 +111,5 @@ function show(bot: SlackBot, message: SlackMessage, text: string): void {
 }
 
 function showError(bot: SlackBot, message: SlackMessage, err: any): void {
-    (bot as any).whisper(message, l('Could not translate text. The reason is ') + ` \`${err}\``)
+    (bot as any).whisper(message, l('err.UnableToTranslate') + ` \`${err}\``)
 }

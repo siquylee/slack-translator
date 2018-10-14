@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
-function l(msg) {
-    return app_1.default.instance.localize(msg);
+function l(msg, args) {
+    return app_1.default.instance.localize(msg, args);
 }
 exports.l = l;
 exports.langs = {

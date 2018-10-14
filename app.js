@@ -50,8 +50,8 @@ class App {
         this.currentLang = lang;
         this.i18n = new i18n_module(lang, this.langFile);
     }
-    localize(msg) {
-        return this.i18n.__(msg);
+    localize(msg, args) {
+        return this.i18n.__(msg, args);
     }
 }
 exports.default = App;

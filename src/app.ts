@@ -55,7 +55,7 @@ export default class App {
         this.i18n = new i18n_module(lang, this.langFile);
     }
 
-    public localize(msg: string): string {
-        return this.i18n.__(msg);
+    public localize(msg: string, args?: any): string {
+        return this.i18n.__(msg, args);
     }
 }
