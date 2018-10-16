@@ -33,6 +33,7 @@ function doTranslate(bot, message, args) {
             show(bot, message, res.text);
         }
     });
+    track('slash', args.to, args.text);
 }
 function showDialog(bot, message, opt) {
     let dialog = bot.createDialog(utils_1.l('msg.formTranslate.Title'), opt.id, utils_1.l('msg.formTranslate.Translate'));
@@ -50,6 +51,13 @@ function show(bot, message, text) {
 }
 function showError(bot, message, err) {
     bot.whisper(message, utils_1.l('err.UnableToTranslate') + ` \`${err}\``);
+}
+function track(event, lang, text) {
+    app_1.default.instance.track('translate', {
+        event: event,
+        lang: lang,
+        text: text
+    });
 }
 module.exports = function (controller) {
     controller.on('slash_command', function (bot, message) {
@@ -97,6 +105,7 @@ module.exports = function (controller) {
                         bot.whisper(message, res.text);
                 }
             });
+            track('dialog', args.to, args.text);
         }
     });
 };

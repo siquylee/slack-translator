@@ -35,6 +35,7 @@ class App {
         this.setLocale(this.currentLang);
         log4js.configure(`${this.rootPath}/log4js.json`);
         this._seneca.use('./plugins/google-translate');
+        this._seneca.use('./plugins/google-analytics');
     }
     getLogger(name = 'default') {
         return log4js.getLogger(name);
@@ -52,6 +53,19 @@ class App {
     }
     localize(msg, args) {
         return this.i18n.__(msg, args);
+    }
+    track(type, args) {
+        let types = ['translate'];
+        if (types.indexOf(type) >= 0) {
+            if (type == 'translate' && process.env.GA_TRACK_ID) {
+                args.role = 'analytics';
+                args.cmd = 'track-translate';
+                App.instance.seneca.act(args, (err, res) => {
+                    if (err)
+                        App.instance.getLogger().error(err);
+                });
+            }
+        }
     }
 }
 exports.default = App;

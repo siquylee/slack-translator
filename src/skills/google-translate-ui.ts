@@ -55,6 +55,7 @@ export = function (controller: SlackController) {
                         (bot as any).whisper(message, res.text);
                 }
             });
+            track('dialog', args.to, args.text);
         }
     });
 }
@@ -88,6 +89,7 @@ function doTranslate(bot: SlackBot, message: SlackMessage, args: any): void {
             show(bot, message, res.text);
         }
     });
+    track('slash', args.to, args.text);
 }
 
 function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
@@ -112,4 +114,12 @@ function show(bot: SlackBot, message: SlackMessage, text: string): void {
 
 function showError(bot: SlackBot, message: SlackMessage, err: any): void {
     (bot as any).whisper(message, l('err.UnableToTranslate') + ` \`${err}\``)
+}
+
+function track(event: string, lang: string, text: string): void {
+    App.instance.track('translate', {
+        event: event,
+        lang: lang,
+        text: text
+    });
 }
