@@ -23,7 +23,7 @@ export = function (controller: SlackController) {
     });
 
     controller.hears([`^/${slashCmd}`], 'direct_mention', function (bot, message) {
-        // Do the translation in thread message
+        // TODO - Do the translation in thread message
     });
 
     controller.on('message_action', function (bot, message) {
@@ -42,7 +42,8 @@ export = function (controller: SlackController) {
             let args = (message as any).submission;
             args.role = 'translator';
             args.cmd = 'translate';
-            args.from = 'auto';
+            if (!args.from)
+                args.from = 'auto';
             App.instance.seneca.act(args, function (err: any, res: any) {
                 if (err) {
                     App.instance.getLogger().error(err);
@@ -98,9 +99,10 @@ function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
         opt.id,
         l('msg.formTranslate.Translate')
     );
-    let targets = new Array();
-    Object.keys(langs).forEach(k => targets.push({ label: langs[k], value: k }));
-    dialog.addSelect(l('msg.formTranslate.To'), 'to', opt.to, targets, { placeholder: l('msg.formTranslate.ToHint') });
+    let languages = new Array();
+    Object.keys(langs).forEach(k => languages.push({ label: langs[k], value: k }));
+    dialog.addSelect(l('msg.formTranslate.From'), 'from', 'auto', languages);
+    dialog.addSelect(l('msg.formTranslate.To'), 'to', opt.to, languages, { placeholder: l('msg.formTranslate.ToHint') });
     dialog.addTextarea(l('msg.formTranslate.Text'), 'text', opt.text, { hint: l('msg.formTranslate.TextHint') });
     (bot as any).replyWithDialog(message, dialog.asObject(), function (err: any, res: any) {
         if (err)

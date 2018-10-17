@@ -5,8 +5,11 @@
     "msg.formTranslate.Title": {
         "en": "Translate Text"
     },
+    "msg.formTranslate.From": {
+        "en": "From"
+    },
     "msg.formTranslate.To": {
-        "en": "To Language"
+        "en": "To"
     },
     "msg.formTranslate.ToHint": {
         "en": "Select language"
@@ -21,7 +24,7 @@
         "en": "Translate"
     },
     "msg.Help": {
-        "en": "Hey {{user}} I am here to help. You can now translate text easily in one of three ways:\n• Use the `/translate` command. The syntax is `/translate [lang] [text]` Where [lang] is equal to a language code such as `de`, `vi`, `ja`, `es`. <https://github.com/siquylee/slack-translator/wiki|Click here> to see the full list of language codes. The source text doesn't have to be English, the app will attempt to auto-detect the source language. There is a 2000 character limit per command.\n• Or use `Translate` action from the actions menu for any Slack messages\n• Or enter `/translate` and the app shows a dialog with fields to select target language and enter your text.\n"
+        "en": "Hey {{user}} I am here to help. You can now translate text easily in one of three ways:\n• Use the `/tl` command. The syntax is `/tl [lang] [text]` Where [lang] is equal to a language code such as `de`, `vi`, `ja`, `es`. <https://github.com/siquylee/slack-translator/wiki|Click here> to see the full list of language codes. The source text doesn't have to be English, the app will attempt to auto-detect the source language. There is a 2000 character limit per command.\n• Or use `Translate` action from the actions menu for any Slack messages\n• Or enter `/tl` and the app shows a dialog with fields to select target language and enter your text.\n"
     },
     "msg.Feedback": {
         "en": "Feedback"

@@ -37,9 +37,10 @@ function doTranslate(bot, message, args) {
 }
 function showDialog(bot, message, opt) {
     let dialog = bot.createDialog(utils_1.l('msg.formTranslate.Title'), opt.id, utils_1.l('msg.formTranslate.Translate'));
-    let targets = new Array();
-    Object.keys(utils_1.langs).forEach(k => targets.push({ label: utils_1.langs[k], value: k }));
-    dialog.addSelect(utils_1.l('msg.formTranslate.To'), 'to', opt.to, targets, { placeholder: utils_1.l('msg.formTranslate.ToHint') });
+    let languages = new Array();
+    Object.keys(utils_1.langs).forEach(k => languages.push({ label: utils_1.langs[k], value: k }));
+    dialog.addSelect(utils_1.l('msg.formTranslate.From'), 'from', 'auto', languages);
+    dialog.addSelect(utils_1.l('msg.formTranslate.To'), 'to', opt.to, languages, { placeholder: utils_1.l('msg.formTranslate.ToHint') });
     dialog.addTextarea(utils_1.l('msg.formTranslate.Text'), 'text', opt.text, { hint: utils_1.l('msg.formTranslate.TextHint') });
     bot.replyWithDialog(message, dialog.asObject(), function (err, res) {
         if (err)
@@ -75,7 +76,7 @@ module.exports = function (controller) {
         }
     });
     controller.hears([`^/${slashCmd}`], 'direct_mention', function (bot, message) {
-        // Do the translation in thread message
+        // TODO - Do the translation in thread message
     });
     controller.on('message_action', function (bot, message) {
         let id = message.callback_id;
@@ -92,7 +93,8 @@ module.exports = function (controller) {
             let args = message.submission;
             args.role = 'translator';
             args.cmd = 'translate';
-            args.from = 'auto';
+            if (!args.from)
+                args.from = 'auto';
             app_1.default.instance.seneca.act(args, function (err, res) {
                 if (err) {
                     app_1.default.instance.getLogger().error(err);

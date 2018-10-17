@@ -1,0 +1,15 @@
+# Environment Config
+
+# store your secrets and config variables in here
+# only invited collaborators will be able to see your .env values
+# reference these in your code with process.env.SECRET
+
+clientId=326498693456.453135174965
+clientSecret=dc2ebe348730f8a5da230af061a46d9d
+clientSigningSecret=f4fa9e5c21ace4263b4dca26bc75006e
+
+PORT=3000
+DB_PATH=/.data/athena.db
+LOCALE_PATH=/app/locales/locale.json
+GA_TRACK_ID=UA-127544018-1
+# note: .env is a shell file so there can’t be spaces around =
