@@ -99,10 +99,12 @@ function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
         opt.id,
         l('msg.formTranslate.Translate')
     );
-    let languages = new Array();
-    Object.keys(langs).forEach(k => languages.push({ label: langs[k], value: k }));
-    dialog.addSelect(l('msg.formTranslate.From'), 'from', 'auto', languages);
-    dialog.addSelect(l('msg.formTranslate.To'), 'to', opt.to, languages, { placeholder: l('msg.formTranslate.ToHint') });
+    let toLangs = new Array();
+    Object.keys(langs).forEach(k => toLangs.push({ label: langs[k], value: k }));
+    let fromLangs = toLangs.slice();
+    fromLangs.unshift({label: l('msg.formTranslate.Auto'), value: 'auto'}); 
+    dialog.addSelect(l('msg.formTranslate.From'), 'from', 'auto', fromLangs, { optional: true });
+    dialog.addSelect(l('msg.formTranslate.To'), 'to', opt.to, toLangs, { placeholder: l('msg.formTranslate.ToHint') });
     dialog.addTextarea(l('msg.formTranslate.Text'), 'text', opt.text, { hint: l('msg.formTranslate.TextHint') });
     (bot as any).replyWithDialog(message, dialog.asObject(), function (err: any, res: any) {
         if (err)

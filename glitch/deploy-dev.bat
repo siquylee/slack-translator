@@ -1,5 +1,6 @@
 echo off
 set sourceDir=..\
+set currDir=%cd%
 set targetDir=C:\glitch\athena
 set envSource=.env-dev
 mkdir %targetDir%\components
@@ -32,3 +33,4 @@ set msg="Deployment on %date% %time%"
 git add -A 
 git commit -m '%msg%'
 git push
+cd %currDir%

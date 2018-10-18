@@ -37,10 +37,12 @@ function doTranslate(bot, message, args) {
 }
 function showDialog(bot, message, opt) {
     let dialog = bot.createDialog(utils_1.l('msg.formTranslate.Title'), opt.id, utils_1.l('msg.formTranslate.Translate'));
-    let languages = new Array();
-    Object.keys(utils_1.langs).forEach(k => languages.push({ label: utils_1.langs[k], value: k }));
-    dialog.addSelect(utils_1.l('msg.formTranslate.From'), 'from', 'auto', languages);
-    dialog.addSelect(utils_1.l('msg.formTranslate.To'), 'to', opt.to, languages, { placeholder: utils_1.l('msg.formTranslate.ToHint') });
+    let toLangs = new Array();
+    Object.keys(utils_1.langs).forEach(k => toLangs.push({ label: utils_1.langs[k], value: k }));
+    let fromLangs = toLangs.slice();
+    fromLangs.unshift({ label: utils_1.l('msg.formTranslate.Auto'), value: 'auto' });
+    dialog.addSelect(utils_1.l('msg.formTranslate.From'), 'from', 'auto', fromLangs, { optional: true });
+    dialog.addSelect(utils_1.l('msg.formTranslate.To'), 'to', opt.to, toLangs, { placeholder: utils_1.l('msg.formTranslate.ToHint') });
     dialog.addTextarea(utils_1.l('msg.formTranslate.Text'), 'text', opt.text, { hint: utils_1.l('msg.formTranslate.TextHint') });
     bot.replyWithDialog(message, dialog.asObject(), function (err, res) {
         if (err)
