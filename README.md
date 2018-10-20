@@ -29,6 +29,20 @@ Once you have setup your Slack Translator development enviroment, the next thing
 
 Update the `.env` file with your newly acquired tokens.
 
+```
+clientId=<YOUR-VALUE>
+clientSecret=<YOUR-VALUE>
+clientSigningSecret=<YOUR-VALUE>
+
+PORT=3000
+DB_PATH=/.data/athena.db
+LOCALE_PATH=/app/locales/locale.json
+GA_TRACK_ID=
+```
+
+* GA_TRACK_ID is optional in case you want to integrate with Google Analytics. GA_TRACK_ID expects at least your Google Analytics account ID like UA-XXXX-XX
+* LOCALE_PATH is the absolute path to `locale.json` file
+
 Launch your bot application by typing:
 
 `node .`
