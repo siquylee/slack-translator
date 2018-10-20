@@ -1,7 +1,7 @@
 .data
 .env
 .sass-cache/*
+glitch/.env*
+glitch/*.bat
 logs/*
 node_modules/*
-tools/*
-

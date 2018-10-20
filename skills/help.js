@@ -17,6 +17,12 @@ function getHelp(message, params) {
         .style('default')
         .end();
     msg.button()
+        .name("website")
+        .text(utils_1.l('msg.Website'))
+        .type("button")
+        .url(utils_1.l('msg.Website.Url'))
+        .end();
+    msg.button()
         .name("support")
         .text(utils_1.l('msg.Support'))
         .type("button")

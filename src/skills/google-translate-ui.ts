@@ -102,7 +102,7 @@ function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
     let toLangs = new Array();
     Object.keys(langs).forEach(k => toLangs.push({ label: langs[k], value: k }));
     let fromLangs = toLangs.slice();
-    fromLangs.unshift({label: l('msg.formTranslate.Auto'), value: 'auto'}); 
+    fromLangs.unshift({ label: l('msg.formTranslate.Auto'), value: 'auto' });
     dialog.addSelect(l('msg.formTranslate.From'), 'from', 'auto', fromLangs, { optional: true });
     dialog.addSelect(l('msg.formTranslate.To'), 'to', opt.to, toLangs, { placeholder: l('msg.formTranslate.ToHint') });
     dialog.addTextarea(l('msg.formTranslate.Text'), 'text', opt.text, { hint: l('msg.formTranslate.TextHint') });

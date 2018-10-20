@@ -47,6 +47,12 @@ function getHelp(message: SlackMessage, params: any): string {
         .style('default')
         .end();
     msg.button()
+        .name("website")
+        .text(l('msg.Website'))
+        .type("button")
+        .url(l('msg.Website.Url'))
+        .end();
+    msg.button()
         .name("support")
         .text(l('msg.Support'))
         .type("button")

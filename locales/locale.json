@@ -33,9 +33,15 @@
         "en": "Feedback"
     },
     "msg.Feedback.Url": {
-        "en": "https://www.google.com.vn"
+        "en": "http://bit.ly/slack-translator-feedback"
     },
     "msg.Support": {
         "en": "Buy Me a Coffee"
+    },
+    "msg.Website": {
+        "en": "App Homepage"
+    },
+    "msg.Website.Url": {
+        "en": "https://github.com/siquylee/slack-translator"
     }
 }
