@@ -9,17 +9,25 @@
     "dependencies": {
         "body-parser": "^1.15.2",
         "botkit": "^0.6.15",
+        "botkit-helper-slack": "^0.1.0",
         "cookie-parser": "^1.4.3",
+        "electron-google-analytics": "^0.1.0",
         "express": "^4.14.0",
         "express-hbs": "^1.0.4",
+        "google-translate-api": "^2.3.0",
+        "i18n-nodejs": "^3.0.0",
+        "log4js": "^3.0.2",
         "node-env-file": "^0.1.8",
         "request": "^2.79.0",
-        "botkit-helper-slack": "^0.1.0",
-        "google-translate-api": "^2.3.0",
-        "log4js": "^3.0.2",
-        "sqlite3": "^4.0.1"
+        "seneca": "^3.7.0",
+        "slack-message-builder": "^1.2.1",
+        "sqlite3": "^4.0.1",
+        "wordcount": "^1.1.1"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "@types/google-translate-api": "^2.3.0",
+        "@types/seneca": "^2.1.9"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/siquylee/slack-translator.git"

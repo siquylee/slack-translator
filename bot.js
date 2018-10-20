@@ -12,6 +12,7 @@ if (!process.env.clientId || !process.env.clientSecret || !process.env.DB_PATH) 
 var bot_options = {
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
+    clientSigningSecret: process.env.clientSigningSecret,
     debug: false,
     scopes: ['bot']
 };
@@ -43,7 +44,7 @@ webserver.get('/', function (req, res) {
 })
 
 // Start app domain
-require(__dirname + '/app.js').default.Instance.init(controller);
+require(__dirname + '/app.js').default.instance.init(controller);
 
 // Set up a simple storage backend for keeping a record of customers
 // who sign up for the app via the oauth

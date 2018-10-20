@@ -5,8 +5,8 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    height: 256px;
-    width: 256px; }
+    max-width: 256px;
+    max-height: 256px; }
 
 body,
 html {
