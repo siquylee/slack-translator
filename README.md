@@ -27,7 +27,7 @@ Once you have setup your Slack Translator development enviroment, the next thing
 
 * We also have this [handy video walkthrough](https://youtu.be/us2zdf0vRz0) for setting up this project with Glitch.
 
-Update the `.env` file with your newly acquired tokens.
+Update the `.env` file with your newly acquired tokens. The content of .env file is:
 
 ```
 clientId=<YOUR-VALUE>

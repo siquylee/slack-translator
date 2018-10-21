@@ -58,7 +58,7 @@ module.exports = function (controller) {
     });
 
     controller.on('create_team', function (bot, team) {
-        console.log('Team created:', team);
+        console.log('Team created:', team.url);
         // Trigger an event that will establish an RTM connection for this bot
         controller.trigger('rtm:start', [bot.config]);
         // Trigger an event that will cause this team to receive onboarding messages
@@ -66,7 +66,7 @@ module.exports = function (controller) {
     });
 
     controller.on('update_team', function (bot, team) {
-        console.log('Team updated:', team);
+        console.log('Team updated:', team.url);
         // Trigger an event that will establish an RTM connection for this bot
         controller.trigger('rtm:start', [bot]);
     });
