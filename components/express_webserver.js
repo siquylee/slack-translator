@@ -17,6 +17,7 @@ module.exports = function (controller) {
     webserver.use(bodyParser.json());
     webserver.use(bodyParser.urlencoded({ extended: true }));
     webserver.use(express.static('public'));
+    webserver.use('/', express.static('public', { index: 'index.html' }));
 
     // Set up handlebars ready for tabs
     webserver.engine('hbs', hbs.express4({ partialsDir: __dirname + '/../views/partials' }));
