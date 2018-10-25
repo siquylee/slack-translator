@@ -14,7 +14,7 @@ var bot_options = {
     clientSecret: process.env.clientSecret,
     clientSigningSecret: process.env.clientSigningSecret,
     debug: false,
-    scopes: ['bot']
+    scopes: ['bot', 'commands']
 };
 
 var dbPath = __dirname + process.env.DB_PATH;
