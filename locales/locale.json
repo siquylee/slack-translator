@@ -2,6 +2,9 @@
     "err.UnableToTranslate": {
         "en": "Could not translate text. The reason is "
     },
+    "err.General": {
+        "en": "Oops! Something went wrong!\nHelp us improve your experience by sending an error report"
+    },
     "msg.formTranslate.Title": {
         "en": "Translate Text"
     },

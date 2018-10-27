@@ -2,34 +2,30 @@ import { SlackController, SlackBot, SlackMessage } from 'botkit';
 import App from '../app';
 import { l, langs } from '../utils';
 
-const callbackTranslateForm = 'google-translate-form';
+const slashTranslate = 'slash-translate';
 const slashCmd = '/tl';
 const actionTranslate = 'action-translate';
 
 export = function (controller: SlackController) {
     controller.on('slash_command', function (bot, message) {
         if ((message as any).command == slashCmd) {
-            bot.replyAcknowledge();
             let args = parseCmd(`/tl ${message.text}`);
             if (args.to && args.text) {
                 // Do the translation
-                doTranslate(bot, message, args);
+                doTranslate4Slash(bot, message, args);
             }
             else {
-                // Show translate dialog
-                showDialog(bot, message, { id: callbackTranslateForm, to: App.instance.lang, text: '' });
+                // Show translate dialog                
+                bot.replyAcknowledge();
+                showDialog(bot, message, { id: slashTranslate, to: App.instance.lang, text: '' });
             }
         }
-    });
-
-    controller.hears([`^/${slashCmd}`], 'direct_mention', function (bot, message) {
-        // TODO - Do the translation in thread message
     });
 
     controller.on('message_action', function (bot, message) {
         let id: string = (message as any).callback_id;
         if (id == actionTranslate) {
-            this.bot.replyAcknowledge();
+            bot.replyAcknowledge();
             let text: string = (message as any).message.text!;
             showDialog(bot, message, { id: actionTranslate, to: App.instance.lang, text: text });
         }
@@ -37,24 +33,16 @@ export = function (controller: SlackController) {
 
     controller.on('dialog_submission', function (bot, message) {
         let id: string = (message as any).callback_id;
-        if (id == callbackTranslateForm || id == actionTranslate) {
-            (bot as any).dialogOk();
+        if (id == slashTranslate || id == actionTranslate) {
             let args = (message as any).submission;
             args.role = 'translator';
             args.cmd = 'translate';
             if (!args.from)
                 args.from = 'auto';
             App.instance.seneca.act(args, function (err: any, res: any) {
-                if (err) {
-                    App.instance.getLogger().error(err);
-                    (bot as any).whisper(message, err);
-                }
-                else {
-                    if (id == callbackTranslateForm)
-                        bot.reply(message, res.text);
-                    else
-                        (bot as any).whisper(message, res.text);
-                }
+                let result = err ? l('err.General') : res.text;
+                bot.replyInteractive(message, result);
+                (bot as any).dialogOk();
             });
             track('dialog', args.to, args.text);
         }
@@ -80,14 +68,14 @@ function parseCmd(cmd: string): any {
     return res;
 }
 
-function doTranslate(bot: SlackBot, message: SlackMessage, args: any): void {
+function doTranslate4Slash(bot: SlackBot, message: SlackMessage, args: any): void {
     App.instance.seneca.act(args, function (err: any, res: any) {
         if (err) {
             App.instance.getLogger().error(err);
-            showError(bot, message, err);
+            showError4Slash(bot, message, l('err.General'));
         }
         else {
-            show(bot, message, res.text);
+            show4Slash(bot, message, res.text);
         }
     });
     track('slash', args.to, args.text);
@@ -112,12 +100,12 @@ function showDialog(bot: SlackBot, message: SlackMessage, opt: any): void {
     });
 }
 
-function show(bot: SlackBot, message: SlackMessage, text: string): void {
-    bot.reply(message, text);
+function show4Slash(bot: SlackBot, message: SlackMessage, text: string): void {
+    bot.replyPublic(message, text);
 }
 
-function showError(bot: SlackBot, message: SlackMessage, err: any): void {
-    (bot as any).whisper(message, l('err.UnableToTranslate') + ` \`${err}\``)
+function showError4Slash(bot: SlackBot, message: SlackMessage, err: string): void {
+    (bot as any).replyPrivate(message, err)
 }
 
 function track(event: string, lang: string, text: string): void {

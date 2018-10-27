@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const app_1 = __importDefault(require("../app"));
 const utils_1 = require("../utils");
-const callbackTranslateForm = 'google-translate-form';
+const slashTranslate = 'slash-translate';
 const slashCmd = '/tl';
 const actionTranslate = 'action-translate';
 function parseCmd(cmd) {
@@ -23,14 +23,14 @@ function parseCmd(cmd) {
     }
     return res;
 }
-function doTranslate(bot, message, args) {
+function doTranslate4Slash(bot, message, args) {
     app_1.default.instance.seneca.act(args, function (err, res) {
         if (err) {
             app_1.default.instance.getLogger().error(err);
-            showError(bot, message, err);
+            showError4Slash(bot, message, utils_1.l('err.General'));
         }
         else {
-            show(bot, message, res.text);
+            show4Slash(bot, message, res.text);
         }
     });
     track('slash', args.to, args.text);
@@ -49,11 +49,11 @@ function showDialog(bot, message, opt) {
             app_1.default.instance.getLogger().error(res);
     });
 }
-function show(bot, message, text) {
-    bot.reply(message, text);
+function show4Slash(bot, message, text) {
+    bot.replyPublic(message, text);
 }
-function showError(bot, message, err) {
-    bot.whisper(message, utils_1.l('err.UnableToTranslate') + ` \`${err}\``);
+function showError4Slash(bot, message, err) {
+    bot.replyPrivate(message, err);
 }
 function track(event, lang, text) {
     app_1.default.instance.track('translate', {
@@ -65,49 +65,38 @@ function track(event, lang, text) {
 module.exports = function (controller) {
     controller.on('slash_command', function (bot, message) {
         if (message.command == slashCmd) {
-            bot.replyAcknowledge();
             let args = parseCmd(`/tl ${message.text}`);
             if (args.to && args.text) {
                 // Do the translation
-                doTranslate(bot, message, args);
+                doTranslate4Slash(bot, message, args);
             }
             else {
-                // Show translate dialog
-                showDialog(bot, message, { id: callbackTranslateForm, to: app_1.default.instance.lang, text: '' });
+                // Show translate dialog                
+                bot.replyAcknowledge();
+                showDialog(bot, message, { id: slashTranslate, to: app_1.default.instance.lang, text: '' });
             }
         }
-    });
-    controller.hears([`^/${slashCmd}`], 'direct_mention', function (bot, message) {
-        // TODO - Do the translation in thread message
     });
     controller.on('message_action', function (bot, message) {
         let id = message.callback_id;
         if (id == actionTranslate) {
-            this.bot.replyAcknowledge();
+            bot.replyAcknowledge();
             let text = message.message.text;
             showDialog(bot, message, { id: actionTranslate, to: app_1.default.instance.lang, text: text });
         }
     });
     controller.on('dialog_submission', function (bot, message) {
         let id = message.callback_id;
-        if (id == callbackTranslateForm || id == actionTranslate) {
-            bot.dialogOk();
+        if (id == slashTranslate || id == actionTranslate) {
             let args = message.submission;
             args.role = 'translator';
             args.cmd = 'translate';
             if (!args.from)
                 args.from = 'auto';
             app_1.default.instance.seneca.act(args, function (err, res) {
-                if (err) {
-                    app_1.default.instance.getLogger().error(err);
-                    bot.whisper(message, err);
-                }
-                else {
-                    if (id == callbackTranslateForm)
-                        bot.reply(message, res.text);
-                    else
-                        bot.whisper(message, res.text);
-                }
+                let result = err ? utils_1.l('err.General') : res.text;
+                bot.replyInteractive(message, result);
+                bot.dialogOk();
             });
             track('dialog', args.to, args.text);
         }
